@@ -3,8 +3,10 @@ package com.farmani.xcalculator
 import java.util.Stack
 
 class Expression(var infixExpression: MutableList<String>) {
+    private var postFix: String = ""
+
     // It's private to follow encapsulation rule (It's used only in this class)
-    private fun infixToPostfix(): String {
+    private fun infixToPostfix() {
         var result = ""
         val stack = Stack<String>()
         for (element in infixExpression) {
@@ -17,6 +19,7 @@ class Expression(var infixExpression: MutableList<String>) {
                     // pop returns the value then empties the stack
                     result += "${stack.pop()} "
                 }
+
                 if (stack.isNotEmpty()) {
                     stack.pop()
                 }
@@ -24,25 +27,27 @@ class Expression(var infixExpression: MutableList<String>) {
                 while (stack.isNotEmpty() && precedence(stack.peek()) >= precedence(element)) {
                     result += "${stack.pop()} "
                 }
+                stack.push(element)
             }
         }
         while (stack.isNotEmpty()) {
             // returns the last item which is left inside stack
             result += "${stack.pop()} "
         }
-        return result
+        postFix = result
     }
 
     private fun precedence(operator: String): Int {
         return when (operator) {
             // Higher number means higher priority
-            "*", "/" -> 2
-            "+", "-" -> 1
+            "×", "÷" -> 2
+            "+", "−" -> 1
             else -> 0
         }
     }
 
-    fun evaluateExpression(postFix: String): Number {
+    fun evaluateExpression(): Number {
+        infixToPostfix()
         val stack = Stack<Double>()
         var i = 0
         // Use while cause we need to skip some steps
@@ -61,15 +66,16 @@ class Expression(var infixExpression: MutableList<String>) {
                 val x = stack.pop() // first top number of stack
                 val y = stack.pop() // second top number of stack
                 when (postFix[i]) {
-                    '*' -> stack.push(x * y)
-                    '/' -> stack.push(x / y)
-                    '+' -> stack.push(x + y)
-                    '-' -> stack.push(x - y)
+                    '×' -> stack.push(y * x)
+                    '÷' -> stack.push(y / x)
+                    '+' -> stack.push(y + x)
+                    '−' -> stack.push(y - x)
                 }
             }
             i++
         }
         // to change numbers like 2.0 into 2
-        return if (stack.peek() / stack.peek().toInt() == 1.0) stack.peek().toInt() else stack.peek()
+        return if (stack.peek() / stack.peek().toInt() == 1.0) stack.peek()
+            .toInt() else stack.peek()
     }
 }

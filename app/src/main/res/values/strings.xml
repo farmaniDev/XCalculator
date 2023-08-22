@@ -19,4 +19,6 @@
     <string name="addition">+</string>
     <string name="subtraction">−</string>
     <string name="equation">=</string>
+    <string name="pow">^</string>
+    <string name="percent">%</string>
 </resources>

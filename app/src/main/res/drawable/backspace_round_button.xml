@@ -10,8 +10,8 @@
         </shape>
     </item>
     <item
-        android:width="50dp"
-        android:height="50dp"
+        android:width="40dp"
+        android:height="40dp"
         android:drawable="@drawable/baseline_backspace_24"
         android:gravity="center"/>
 </layer-list>
